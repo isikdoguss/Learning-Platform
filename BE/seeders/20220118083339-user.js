@@ -6,7 +6,6 @@ module.exports = {
       "user",
       [
         {
-          id: 1,
           first_name: "Doğuş",
           last_name: "Işık",
           email: "dogussisik@gmail.com",
@@ -15,7 +14,6 @@ module.exports = {
           updated_at: new Date(),
         },
         {
-          id: 2,
           first_name: "İlker",
           last_name: "Cankat",
           email: "ilkerC@gmail.com",
@@ -24,7 +22,6 @@ module.exports = {
           updated_at: new Date(),
         },
         {
-          id: 3,
           first_name: "Berker",
           last_name: "Topaloğlu",
           email: "bTopal@gmail.com",
@@ -33,7 +30,14 @@ module.exports = {
           updated_at: new Date(),
         },
         {
-          id: 5,
+          first_name: "Someone",
+          last_name: "Something",
+          email: "somesome@gmail.com",
+          password: "1234567",
+          created_at: new Date(),
+          updated_at: new Date(),
+        },
+        {
           first_name: "Kağan",
           last_name: "Demirhindi",
           email: "kDemirhindi@gmail.com",
@@ -42,34 +46,30 @@ module.exports = {
           updated_at: new Date(),
         },
         {
-          id: 6,
           first_name: "John",
-          last_name: "Demirhindi",
-          email: "kDemirhindi@gmail.com",
+          last_name: "Cena",
+          email: "johnCena@gmail.com",
           password: "1234567",
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
-          id: 7,
-          first_name: "Kağan",
-          last_name: "Demirhindi",
-          email: "kDemirhindi@gmail.com",
+          first_name: "Senna",
+          last_name: "Lucian",
+          email: "sLucian@gmail.com",
           password: "1234567",
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
-          id: 8,
-          first_name: "Kağan",
+          first_name: "James",
           last_name: "Doe",
-          email: "johndoe@gmail.com",
+          email: "jamesdoe@gmail.com",
           password: "1234567",
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
-          id: 9,
           first_name: "Mrs.",
           last_name: "Brown",
           email: "mrsBrown@gmail.com",
@@ -78,7 +78,6 @@ module.exports = {
           updated_at: new Date(),
         },
         {
-          id: 10,
           first_name: "Lydia",
           last_name: "Johansonn",
           email: "lydiaj@gmail.com",
@@ -92,11 +91,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete("user", null, {});
   },
 };

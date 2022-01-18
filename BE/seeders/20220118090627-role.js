@@ -6,19 +6,16 @@ module.exports = {
       "role",
       [
         {
-          id: 1,
           name: "Student",
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
-          id: 2,
           name: "Tutor",
           created_at: new Date(),
           updated_at: new Date(),
         },
         {
-          id: 3,
           name: "Admin",
           created_at: new Date(),
           updated_at: new Date(),
@@ -29,11 +26,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    await queryInterface.bulkDelete("role", null, {});
   },
 };
