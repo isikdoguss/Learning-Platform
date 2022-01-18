@@ -13,7 +13,6 @@ module.exports = {
         type: Sequelize.STRING,
       },
       parent_id: {
-        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: "category",
