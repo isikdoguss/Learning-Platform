@@ -3,11 +3,10 @@ const db = require("../config/sequelize.config");
 const Course = require("../models/course");
 const Course_category = require("../models/course_category");
 
+//GET ALL COURSES UNDER THE SPECIFIIC CATEGORY.
 exports.findAllCoursesByCategory = async (req, res) => {
   const { categoryId } = req.params;
-  // let { limit, page } = req.query;
-  // page < 1 ? page=1: page ;
-  // const offset =  (page * limit - limit);
+
   const courses = await Course.findAll({
     include: [
       {
@@ -29,6 +28,7 @@ exports.findAllCoursesByCategory = async (req, res) => {
   return res.status(200).send(courses);
 };
 
+//GET ALL COURSES.
 exports.findAllCourses = async (req, res) => {
   const courses = await Course.findAll();
 
@@ -41,6 +41,7 @@ exports.findAllCourses = async (req, res) => {
   return res.status(200).send(courses);
 };
 
+//GET A SPECIFIC COURSE.
 exports.getCourse = async (req, res) => {
   const { id } = req.params;
   const course = await Course.findOne({
@@ -55,35 +56,34 @@ exports.getCourse = async (req, res) => {
   return res.status(200).send(course);
 };
 
+//CREATE NEW COURSE.
 exports.createCourse = async (req, res) => {
-  const { name, sku, description, parentId, stock } = req.body;
-  // Checks if the product name exists. parentId can be null if the product is a parent product.
-  if (!name || !sku || !description || !stock) {
+  const { name, tutor_id, path } = req.body;
+  //
+  if (!name || !tutor_id || !path) {
     return res.status(400).send({
-      message: "You need to fill in the product name.",
+      message: "You need to fill in the course name,tutor_id,path.",
     });
   }
 
-  // Checks if the product name exists
-  let productExists = await Product.findOne({
+  // Checks if the course name exists
+  let courseExists = await Course.findOne({
     where: { name },
   });
-  if (productExists)
+  if (courseExists)
     return res
       .status(400)
-      .send({ message: `A product named ${name} already exists!` });
+      .send({ message: `A course named ${name} already exists!` });
 
-  // Create product
+  // Create course
   try {
-    let newProduct = await Product.create({
+    let newCourse = await Course.create({
       name,
-      sku,
-      description,
-      parentId,
-      stock,
+      tutor_id,
+      path,
     });
-    console.log(newProduct);
-    return res.status(201).send(newProduct);
+
+    return res.status(201).send(newCourse);
   } catch (err) {
     return res.status(500).send({
       message: `Error : ${err.message}`,
@@ -91,45 +91,33 @@ exports.createCourse = async (req, res) => {
   }
 };
 
-/**
- * Updates product
- * The user has to pass jwtValidation
- * @param {Express.request} req Request that includes product information that are name, parentId <nullable>
- * @param {Express.response} res
- * @returns
- */
-exports.updateProduct = async (req, res) => {
-  const { name, sku, description, stock, parentId } = req.body;
+//UPDATE A COURSE.
+exports.updateCourse = async (req, res) => {
+  const { name, tutor_id, path } = req.body;
   const { id } = req.params;
 
-  const product = await Product.findOne({ where: { id } });
+  const course = await Course.findOne({ where: { id } });
 
-  if (!product) {
+  if (!course) {
     return res.status(400).send({
-      message: `No product exists with the id ${id}`,
+      message: `No course exists with the id ${id}`,
     });
   }
 
   try {
-    //TODO: refactor
     if (name) {
-      product.name = name;
+      course.name = name;
     }
-    if (sku) {
-      product.parentId = parentId;
+    if (tutor_id) {
+      course.tutor_id = tutor_id;
     }
-    if (description) {
-      product.parentId = parentId;
+    if (path) {
+      course.path = path;
     }
-    if (stock) {
-      product.parentId = parentId;
-    }
-    if (parentId) {
-      product.parentId = parentId;
-    }
-    product.save();
+
+    course.save();
     return res.status(200).send({
-      message: `Product ${name} has been updated!`,
+      message: `Course ${name} has been updated!`,
     });
   } catch (err) {
     return res.status(500).send({
@@ -138,32 +126,26 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-/**
- * Deletes product
- * The user has to pass jwtValidation
- * @param {Express.request} req Request that includes product id as params
- * @param {Express.response} res
- * @returns
- */
-exports.deleteProduct = async (req, res) => {
+//DELETE A COURSE.
+exports.deleteCourse = async (req, res) => {
   const { id } = req.params;
 
   if (!id)
     return res.status(400).send({
-      message: `Please provide the ID of the product you are trying to delete.`,
+      message: `Please provide the ID of the course you are trying to delete.`,
     });
 
-  const product = await Product.findOne({ where: { id } });
+  const course = await Course.findOne({ where: { id } });
 
-  if (!product) {
+  if (!course) {
     return res
       .status(400)
-      .send({ message: `No product exists with the id ${id}` });
+      .send({ message: `No course exists with the id ${id}` });
   }
 
   try {
-    await product.destroy();
-    return res.status(204).send({ message: `Product ${id} has been deleted.` });
+    await course.destroy();
+    return res.status(204).send({ message: `Course ${id} has been deleted.` });
   } catch (err) {
     return res.status(500).send({
       message: `Error : ${err.message}`,

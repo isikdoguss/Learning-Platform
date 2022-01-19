@@ -24,16 +24,13 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Route Middlewares
-app.use("/auth", routes.auth);
-app.use("/users", routes.users);
-app.use("/roles", routes.roles); //
-app.use("/userRoles", routes.userRoles);
-app.use("/categories", routes.categories);
-app.use("/prices", routes.prices);
-app.use("/libraries", routes.libraries);
-app.use("/products", routes.products);
-app.use("/productCategories", routes.productCategories);
-app.use("/productLibraries", routes.productLibraries);
+// app.use("/auth", routes.auth);
+// app.use("/user", routes.user);
+// app.use("/role", routes.role); //
+// app.use("/user_role", routes.user_role);
+// app.use("/category", routes.category);
+// app.use("/course", routes.course);
+// app.use("/course_category", routes.course_category);
 
 app.use((req, res) => {
   res.status(404).send("404 Page not found.");

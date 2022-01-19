@@ -22,11 +22,11 @@ module.exports = (sequelize, DataTypes) => {
       User_course_enroll.belongsTo(user);
       User_course_enroll.belongsTo(course);
       user.hasMany(User_course_enroll, {
-        foreingKey: { name: "student_id", allowNull: false },
+        foreignKey: { name: "student_id", allowNull: false },
         onDelete: "CASCADE",
       });
       course.hasMany(User_course_enroll, {
-        foreingKey: { name: "course_id", allowNull: false },
+        foreignKey: { name: "course_id", allowNull: false },
         onDelete: "CASCADE",
       });
     }

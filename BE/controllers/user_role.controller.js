@@ -15,7 +15,7 @@ exports.findAllUserRoles = async (req, res) => {
 
 exports.getUserRole = async (req, res) => {
   const { id } = req.params;
-  const userRole = await user_role.findOne({ where: { id } });
+  const userRole = await user_role.findOne({ where: { user_id: id } });
 
   if (!userRole) {
     return res.status(404).send({

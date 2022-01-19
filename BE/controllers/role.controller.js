@@ -103,7 +103,7 @@ exports.deleteRole = async (req, res) => {
 
   try {
     await role.destroy();
-    return res.status(204).send({ message: `Product ${id} has been deleted.` });
+    return res.status(204).send({ message: `Course ${id} has been deleted.` });
   } catch (err) {
     return res.status(500).send({
       message: `Error : ${err.message}`,
