@@ -1,5 +1,7 @@
 const db = require("../config/sequelize.config");
-const Category = require("../models/category");
+// const Category = require("../models/category");
+const model = require("../models");
+const Category = model.Category;
 
 //GET PARENTS CATEGORY ONLY.
 exports.getParentCategories = async (req, res) => {
@@ -18,7 +20,7 @@ exports.getParentCategories = async (req, res) => {
 
 exports.findAllChildCategories = async (req, res) => {
   const { parentId } = req.params;
-  const categories = await Category.findAll({ where: { parent_id: parentId } });
+  const categories = await Category.findAll({ where: { parentId: parentId } });
 
   if (!categories) {
     return res.status(404).send({
@@ -80,7 +82,7 @@ exports.createCategory = async (req, res) => {
   try {
     let newCategory = await Category.create({
       name: name,
-      parent_id: parentId,
+      parentId: parentId,
     });
     return res.status(201).send(newCategory);
   } catch (err) {
@@ -110,7 +112,7 @@ exports.updateCategory = async (req, res) => {
       category.name = name;
     }
     if (parentId) {
-      category.parent_id = parentId;
+      category.parentId = parentId;
     }
     category.save();
     return res.status(200).send({

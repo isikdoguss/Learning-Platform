@@ -1,5 +1,7 @@
 const db = require("../config/sequelize.config");
-const CourseCategory = require("../models/course_category");
+// const CourseCategory = require("../models/course_category");
+const model = require("../models");
+const CourseCategory = model.Course_category;
 
 //GET ALL COURSE-CATEGORIES.
 exports.findAllCourseCategories = async (req, res) => {
@@ -18,7 +20,7 @@ exports.findAllCourseCategories = async (req, res) => {
 exports.getCourseCategory = async (req, res) => {
   const { id } = req.params;
   const courseCategory = await CourseCategory.findOne({
-    where: { course_id: id },
+    where: { courseId: id },
   });
 
   if (!courseCategory) {
@@ -43,7 +45,7 @@ exports.createCourseCategory = async (req, res) => {
 
   // Checks if the courseId and courseCategory exist in the database.
   let courseId_categoryIdExists = await CourseCategory.findOne({
-    where: { course_id: courseId, category_id: categoryId },
+    where: { courseId: courseId, categoryId: categoryId },
   });
   if (courseId_categoryIdExists)
     return res.status(400).send({
@@ -53,8 +55,8 @@ exports.createCourseCategory = async (req, res) => {
   // Create courseCategory
   try {
     let newCourseCategory = await CourseCategory.create({
-      course_id: courseId,
-      category_id: categoryId,
+      courseId: courseId,
+      categoryId: categoryId,
     });
     return res.status(201).send(newCourseCategory);
   } catch (err) {
@@ -80,10 +82,10 @@ exports.updateCourseCategory = async (req, res) => {
   try {
     //TODO: refactor
     if (courseId) {
-      courseCategory.course_id = courseId;
+      courseCategory.courseId = courseId;
     }
     if (categoryId) {
-      courseCategory.category_id = categoryId;
+      courseCategory.categoryId = categoryId;
     }
     courseCategory.save();
     return res.status(200).send({

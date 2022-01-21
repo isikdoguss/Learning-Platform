@@ -1,8 +1,10 @@
 const db = require("../config/sequelize.config");
-const role = require("../models/role");
+// const role = require("../models/role");
+const model = require("../models");
+const Role = model.Role;
 
 exports.findAllRoles = async (req, res) => {
-  const roles = await role.findAll();
+  const roles = await Role.findAll();
 
   if (!roles) {
     return res.status(404).send({
@@ -15,7 +17,7 @@ exports.findAllRoles = async (req, res) => {
 
 exports.getRole = async (req, res) => {
   const { id } = req.params;
-  const role = await role.findOne({ where: { id } });
+  const role = await Role.findOne({ where: { id } });
 
   if (!role) {
     return res.status(404).send({
@@ -36,7 +38,7 @@ exports.createRole = async (req, res) => {
   }
 
   // Checks if the role name exists
-  let roleExists = await role.findOne({
+  let roleExists = await Role.findOne({
     where: { name },
   });
   if (roleExists)
@@ -46,7 +48,7 @@ exports.createRole = async (req, res) => {
 
   // Create role
   try {
-    let newRole = await role.create({
+    let newRole = await Role.create({
       name,
     });
     return res.status(201).send(newRole);
@@ -61,7 +63,7 @@ exports.updateRole = async (req, res) => {
   const { name } = req.body;
   const { id } = req.params;
 
-  const role = await role.findOne({ where: { id } });
+  const role = await Role.findOne({ where: { id } });
 
   if (!role) {
     return res.status(400).send({
@@ -93,7 +95,7 @@ exports.deleteRole = async (req, res) => {
       message: `Please provide the ID of the role you are trying to delete.`,
     });
 
-  const role = await role.findOne({ where: { id } });
+  const role = await Role.findOne({ where: { id } });
 
   if (!role) {
     return res

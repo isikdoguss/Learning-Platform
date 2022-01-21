@@ -1,10 +1,15 @@
 require("dotenv").config();
-const UserRole = require("../models/user_role");
-const User = require("../models/user");
-const Role = require("../models/role");
+// const UserRole = require("../models");
+// const User = require("../models/user");
+// const Role = require("../models/role");
+const model = require("../models");
+const User = model.User;
+const Role = model.Role;
+const UserRole = model.User_role;
 const jwt = require("jsonwebtoken");
 const { saltAndHashPassword, comparePasswords } = require("../utils/password");
 const { registerValidation, loginValidation } = require("../utils/validation");
+const { sequelize } = require("../models");
 
 //HANDLE REGISTER.
 
@@ -28,14 +33,13 @@ exports.register = async (req, res) => {
   // Create & Save & Authorize User
   try {
     let newUser = await User.create({
-      first_name: firstName,
-      last_name: lastName,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       password: hashedPassword,
     });
-
     // Give default role to the user (authorization concept)
-    await setDefaultRole(newUser.id);
+    await setDefaultRole(newUser.dataValues.id);
 
     return res.status(201).send(newUser); // TODO: { user: newUser.id } - best way is to send activation mail, then assign the default user role.
   } catch (err) {
@@ -58,14 +62,6 @@ exports.login = async (req, res) => {
 
   // Check if the email exists
   let user = await User.findOne({
-    //TODO: fetch user roles within these block
-    // include: [
-    //     {
-    //         model: UserRole,
-    //         attributes: ["roleId"],
-    //         include: [{model: Role, attributes:["name"]}],
-    //     },
-    // ],
     where: { email },
   });
   if (!user)
@@ -91,31 +87,27 @@ exports.login = async (req, res) => {
     .send({ token: `Bearer ${token}` });
 };
 
-/**
- *  Sets default role(student) to the newly registered user.
- * @param {Integer} userId
- */
 const setDefaultRole = async (userId) => {
+  console.log("userıd: ", userId);
   var defaultRole = await Role.findOne({
     where: { name: "Student" },
   });
+  console.log("defaultrole: ", defaultRole.dataValues.id);
 
   let newUserRole = await UserRole.create({
-    user_id: userId,
-    role_id: defaultRole.id,
+    userId: userId,
+    roleId: defaultRole.dataValues.id,
   });
 };
 
-/**
- *  Gets roles of the user
- * @param {Integer} userId
- */
 const getClaims = async (userId) => {
-  const userRoles = await UserRole.findAll({
-    where: { user_id: userId },
-    attributes: ["role_id"],
-    include: { model: Role, right: true, attributes: ["name"] }, // Includes Roles table and selects name field only.
-  });
+  const [userRoles, metada] = await sequelize.query(
+    `SELECT "UserRole"."userId", "UserRole"."roleId", "Role"."id" AS "Role.id", "Role"."name" AS "Role.name" FROM "User_roles" AS "UserRole" RIGHT OUTER JOIN "Roles" AS "Role" ON "UserRole"."roleId" = "Role"."id" WHERE "UserRole"."userId" = ${userId}`
+  );
+  // where: { userId: userId },
+  // attributes: ["roleId"],
+  // include: { model: Role, right: true, attributes: ["name"] }, // Includes Roles table and selects name field only.
+  // });
 
   return userRoles;
 };

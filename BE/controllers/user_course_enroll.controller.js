@@ -1,5 +1,7 @@
 const db = require("../config/sequelize.config");
-const UserCourseEnroll = require("../models/user_course_enroll");
+// const UserCourseEnroll = require("../models/user_course_enroll");
+const model = require("../models");
+const UserCourseEnroll = model.User_course_enroll;
 
 //GET ALL USER-COURSE ENROLLS.
 exports.findAllUserCourseEnrolls = async (req, res) => {
@@ -17,7 +19,7 @@ exports.findAllUserCourseEnrolls = async (req, res) => {
 //GET ENROLLS BY STUDENTID
 exports.getUserCourseEnroll = async (req, res) => {
   const { id } = req.params;
-  const enroll = await UserCourseEnroll.findOne({ where: { student_id: id } });
+  const enroll = await UserCourseEnroll.findOne({ where: { studentId: id } });
 
   if (!enroll) {
     return res.status(404).send({
@@ -30,9 +32,9 @@ exports.getUserCourseEnroll = async (req, res) => {
 
 //Creates new Enroll.
 exports.createUserCourseEnroll = async (req, res) => {
-  const { student_id, course_id } = req.body;
+  const { studentId, courseId } = req.body;
   // Checks if the studentId and courseId exist.
-  if (!student_id || !course_id) {
+  if (!studentId || !courseId) {
     return res.status(400).send({
       message: "You need to fill in all fields.",
     });
@@ -40,18 +42,18 @@ exports.createUserCourseEnroll = async (req, res) => {
 
   // Checks if the courseId and UserCourseEnroll exist in the database.
   let studentID_courseIDExists = await UserCourseEnroll.findOne({
-    where: { student_id, course_id },
+    where: { studentId, courseId },
   });
   if (studentID_courseIDExists)
     return res.status(400).send({
-      message: `A enroll entry with the studentID ${student_id} and courseID ${course_id} already exists!`,
+      message: `A enroll entry with the studentID ${studentId} and courseID ${courseId} already exists!`,
     });
 
   // Create UserCourseEnroll
   try {
     let newEnroll = await UserCourseEnroll.create({
-      student_id,
-      course_id,
+      studentId,
+      courseId,
     });
     return res.status(201).send(newEnroll);
   } catch (err) {
@@ -63,7 +65,7 @@ exports.createUserCourseEnroll = async (req, res) => {
 
 //UPDATE ENROLL
 exports.updateEnroll = async (req, res) => {
-  const { student_id, course_id } = req.body;
+  const { studentId, courseId } = req.body;
   const { id } = req.params;
 
   const enroll = await UserCourseEnroll.findOne({ where: { id } });
@@ -75,11 +77,11 @@ exports.updateEnroll = async (req, res) => {
   }
 
   try {
-    if (student_id) {
-      UserCourseEnroll.student_id = student_id;
+    if (studentId) {
+      UserCourseEnroll.studentId = studentId;
     }
-    if (course_id) {
-      UserCourseEnroll.course_id = course_id;
+    if (courseId) {
+      UserCourseEnroll.courseId = courseId;
     }
     UserCourseEnroll.save();
     return res.status(200).send({

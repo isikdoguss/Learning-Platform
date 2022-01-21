@@ -1,9 +1,11 @@
-const db = require("../config/sequelize.config");
-const user = require("../models/user");
+const db = require("../config/config");
+const model = require("../models");
+const User = model.User;
+
 const { saltAndHashPassword } = require("../utils/password");
 
 exports.findAllUsers = async (req, res) => {
-  const users = await user.findAll();
+  const users = await User.findAll();
 
   if (!users) {
     return res.status(404).send({
@@ -16,7 +18,7 @@ exports.findAllUsers = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   const { id } = req.params;
-  const user = await user.findOne({
+  const user = await User.findOne({
     where: { id },
   });
 
@@ -39,7 +41,7 @@ exports.createUser = async (req, res) => {
   }
 
   // Checks if the email exists
-  let userEmailExists = await user.findOne({
+  let userEmailExists = await User.findOne({
     where: { email },
   });
   if (userEmailExists)
@@ -50,9 +52,9 @@ exports.createUser = async (req, res) => {
   // Create user
   try {
     const hashedPassword = await saltAndHashPassword(password);
-    let newUser = await user.create({
-      first_name: firstName,
-      last_name: lastName,
+    let newUser = await User.create({
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       password: hashedPassword,
     });
@@ -68,7 +70,7 @@ exports.updateUser = async (req, res) => {
   const { firstName, lastName, email, password } = req.body;
   const { id } = req.params;
 
-  const user = await user.findOne({ where: { id } });
+  const user = await User.findOne({ where: { id } });
 
   if (!user) {
     return res.status(404).send({
@@ -79,10 +81,10 @@ exports.updateUser = async (req, res) => {
   try {
     //TODO: refactor
     if (firstName) {
-      user.first_name = firstName;
+      user.firstName = firstName;
     }
     if (lastName) {
-      user.last_name = lastName;
+      user.lastName = lastName;
     }
     if (email) {
       user.email = email;
@@ -109,7 +111,7 @@ exports.deleteUser = async (req, res) => {
       message: `Please provide the ID of the user you are trying to delete.`,
     });
 
-  const user = await user.findOne({ where: { id } });
+  const user = await User.findOne({ where: { id } });
 
   if (!user) {
     return res

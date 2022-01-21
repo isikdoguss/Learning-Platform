@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
-const user = require("./user");
-const course = require("./course");
+// const user = require("./user");
+// const course = require("./course");
 module.exports = (sequelize, DataTypes) => {
   class User_course_enroll extends Model {
     /**
@@ -11,30 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association hereproduct.belongsToMany(category, { through: ProductCategory, foreignKey:{allowNull:false, name:'productId'}});
-      user.belongsToMany(course, {
+      models.User.belongsToMany(models.Course, {
         through: User_course_enroll,
-        foreignKey: { allowNull: false, name: "student_id" },
+        foreignKey: { allowNull: false, name: "studentId" },
       });
-      course.belongsToMany(user, {
+      models.Course.belongsToMany(models.User, {
         through: User_course_enroll,
-        foreignKey: { allowNull: false, name: "course_id" },
+        foreignKey: { allowNull: false, name: "courseId" },
       });
-      User_course_enroll.belongsTo(user);
-      User_course_enroll.belongsTo(course);
-      user.hasMany(User_course_enroll, {
-        foreignKey: { name: "student_id", allowNull: false },
-        onDelete: "CASCADE",
-      });
-      course.hasMany(User_course_enroll, {
-        foreignKey: { name: "course_id", allowNull: false },
-        onDelete: "CASCADE",
-      });
+      // User_course_enroll.belongsTo(models.User);
+      // User_course_enroll.belongsTo(models.Course);
+      // models.User.hasMany(User_course_enroll, {
+      //   foreignKey: { name: "studentId", allowNull: false },
+      //   onDelete: "CASCADE",
+      // });
+      // models.Course.hasMany(User_course_enroll, {
+      //   foreignKey: { name: "courseId", allowNull: false },
+      //   onDelete: "CASCADE",
+      // });
     }
   }
   User_course_enroll.init(
     {
-      student_id: DataTypes.INTEGER,
-      course_id: DataTypes.INTEGER,
+      studentId: DataTypes.INTEGER,
+      courseId: DataTypes.INTEGER,
     },
     {
       sequelize,

@@ -1,9 +1,11 @@
 const db = require("../config/sequelize.config");
-const user_role = require("../models/user_role");
+// const user_role = require("../models/user_role");
+const model = require("../models");
+const UserRole = model.User_role;
 
 exports.findAllUserRoles = async (req, res) => {
-  const userRoles = await user_role.findAll();
-
+  const userRoles = await UserRole.findAll();
+  console.log("abc", userRoles);
   if (!userRoles) {
     return res.status(404).send({
       message: `No user role found.`,
@@ -15,7 +17,8 @@ exports.findAllUserRoles = async (req, res) => {
 
 exports.getUserRole = async (req, res) => {
   const { id } = req.params;
-  const userRole = await user_role.findOne({ where: { user_id: id } });
+
+  const userRole = await UserRole.findOne({ where: { userId: id } });
 
   if (!userRole) {
     return res.status(404).send({
@@ -35,8 +38,8 @@ exports.createUserRole = async (req, res) => {
     });
   }
   // Check whether there is an entry in the database matching the userId and roleId given in the data.
-  let userId_roleIdExist = await user_role.findOne({
-    where: { user_id: userId, role_id: roleId },
+  let userId_roleIdExist = await UserRole.findOne({
+    where: { userId: userId, roleId: roleId },
   });
   if (userId_roleIdExist)
     return res.status(400).send({
@@ -45,9 +48,9 @@ exports.createUserRole = async (req, res) => {
 
   // Create userRole
   try {
-    let newUserRole = await user_role.create({
-      user_id: userId,
-      role_id: roleId,
+    let newUserRole = await UserRole.create({
+      userId: userId,
+      roleId: roleId,
     });
     return res.status(201).send(newUserRole);
   } catch (err) {
@@ -61,7 +64,7 @@ exports.updateUserRole = async (req, res) => {
   const { userId, roleId } = req.body;
   const { id } = req.params;
 
-  const userRole = await user_role.findOne({ where: { id } });
+  const userRole = await UserRole.findOne({ where: { id } });
 
   if (!userRole) {
     return res.status(400).send({
@@ -72,10 +75,10 @@ exports.updateUserRole = async (req, res) => {
   try {
     //TODO: refactor
     if (userId) {
-      user_role.user_id = userId;
+      userRole.userId = userId;
     }
     if (roleId) {
-      user_role.role_id = roleId;
+      userRole.roleId = roleId;
     }
     userRole.save();
     return res.status(200).send({
@@ -96,7 +99,7 @@ exports.deleteUserRole = async (req, res) => {
       message: `Please provide the ID of the user role entry you are trying to delete.`,
     });
 
-  const userRole = await user_role.findOne({ where: { id } });
+  const userRole = await UserRole.findOne({ where: { id } });
 
   if (!userRole) {
     return res
@@ -105,7 +108,7 @@ exports.deleteUserRole = async (req, res) => {
   }
 
   try {
-    await user_role.destroy();
+    await userRole.destroy();
     return res.status(204).send({
       message: `User role entry with the id: ${id} has been deleted.`,
     });

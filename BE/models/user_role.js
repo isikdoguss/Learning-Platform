@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
-const user = require("./user");
-const role = require("./role");
+// const user = require("./user");
+// const role = require("./role");
 module.exports = (sequelize, DataTypes) => {
   class User_role extends Model {
     /**
@@ -11,30 +11,30 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // Relationship with other tables. Essential for including join tables in to the query.
-      user.belongsToMany(role, {
+      models.User.belongsToMany(models.Role, {
         through: User_role,
-        foreignKey: { allowNull: false, name: "user_id" },
+        foreignKey: { allowNull: false, name: "userId" },
       });
-      role.belongsToMany(user, {
+      models.Role.belongsToMany(models.User, {
         through: User_role,
-        foreignKey: { allowNull: false, name: "role_id" },
+        foreignKey: { allowNull: false, name: "roleId" },
       });
-      User_role.belongsTo(user);
-      User_role.belongsTo(role);
-      user.hasMany(User_role, {
-        foreignKey: { name: "user_id", allowNull: false },
-        onDelete: "CASCADE",
-      });
-      role.hasMany(User_role, {
-        foreignKey: { name: "role_id", allowNull: false },
-        onDelete: "CASCADE",
-      });
+      // User_role.belongsTo(models.User);
+      // User_role.belongsTo(models.Role);
+      // models.User.hasMany(User_role, {
+      //   foreignKey: { name: "userId", allowNull: false },
+      //   onDelete: "CASCADE",
+      // });
+      // models.Role.hasMany(User_role, {
+      //   foreignKey: { name: "roleId", allowNull: false },
+      //   onDelete: "CASCADE",
+      // });
     }
   }
   User_role.init(
     {
-      user_id: DataTypes.INTEGER,
-      role_id: DataTypes.INTEGER,
+      userId: DataTypes.INTEGER,
+      roleId: DataTypes.INTEGER,
     },
     {
       sequelize,

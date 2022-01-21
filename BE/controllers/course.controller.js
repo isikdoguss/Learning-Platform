@@ -1,7 +1,8 @@
 const { Op } = require("sequelize");
 const db = require("../config/sequelize.config");
-const Course = require("../models/course");
-const Course_category = require("../models/course_category");
+const model = require("../models");
+const Course = model.Course;
+const Course_category = model.Course_category;
 
 //GET ALL COURSES UNDER THE SPECIFIIC CATEGORY.
 exports.findAllCoursesByCategory = async (req, res) => {
@@ -58,11 +59,11 @@ exports.getCourse = async (req, res) => {
 
 //CREATE NEW COURSE.
 exports.createCourse = async (req, res) => {
-  const { name, tutor_id, path } = req.body;
+  const { name, tutorId, path } = req.body;
   //
-  if (!name || !tutor_id || !path) {
+  if (!name || !tutorId || !path) {
     return res.status(400).send({
-      message: "You need to fill in the course name,tutor_id,path.",
+      message: "You need to fill in the course name,tutorId,path.",
     });
   }
 
@@ -79,7 +80,7 @@ exports.createCourse = async (req, res) => {
   try {
     let newCourse = await Course.create({
       name,
-      tutor_id,
+      tutorId,
       path,
     });
 
@@ -93,7 +94,7 @@ exports.createCourse = async (req, res) => {
 
 //UPDATE A COURSE.
 exports.updateCourse = async (req, res) => {
-  const { name, tutor_id, path } = req.body;
+  const { name, tutorId, path } = req.body;
   const { id } = req.params;
 
   const course = await Course.findOne({ where: { id } });
@@ -108,8 +109,8 @@ exports.updateCourse = async (req, res) => {
     if (name) {
       course.name = name;
     }
-    if (tutor_id) {
-      course.tutor_id = tutor_id;
+    if (tutorId) {
+      course.tutorId = tutorId;
     }
     if (path) {
       course.path = path;
