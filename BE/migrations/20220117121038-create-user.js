@@ -35,10 +35,10 @@ module.exports = {
           allowNull: false,
           type: Sequelize.DATE,
         },
-      },
-      {
-        freezeTableName: true,
       }
+      // {
+      //   tablename: "Users",
+      // }
     );
   },
   async down(queryInterface, Sequelize) {

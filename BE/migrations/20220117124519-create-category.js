@@ -31,7 +31,7 @@ module.exports = {
         },
       },
       {
-        freezeTableName: true,
+        tablename: "Categories",
       }
     );
   },

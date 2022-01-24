@@ -59,9 +59,9 @@ exports.getCourse = async (req, res) => {
 
 //CREATE NEW COURSE.
 exports.createCourse = async (req, res) => {
-  const { name, tutorId, path } = req.body;
+  const { name, tutorId, path, description, price } = req.body;
   //
-  if (!name || !tutorId || !path) {
+  if (!name || !tutorId || !path || !description || !price) {
     return res.status(400).send({
       message: "You need to fill in the course name,tutorId,path.",
     });
@@ -82,6 +82,8 @@ exports.createCourse = async (req, res) => {
       name,
       tutorId,
       path,
+      description,
+      price,
     });
 
     return res.status(201).send(newCourse);
@@ -94,7 +96,7 @@ exports.createCourse = async (req, res) => {
 
 //UPDATE A COURSE.
 exports.updateCourse = async (req, res) => {
-  const { name, tutorId, path } = req.body;
+  const { name, tutorId, path, description, price } = req.body;
   const { id } = req.params;
 
   const course = await Course.findOne({ where: { id } });
@@ -114,6 +116,12 @@ exports.updateCourse = async (req, res) => {
     }
     if (path) {
       course.path = path;
+    }
+    if (description) {
+      course.description = description;
+    }
+    if (price) {
+      course.price = price;
     }
 
     course.save();
