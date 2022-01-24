@@ -26,6 +26,14 @@ module.exports = {
           allowNull: false,
           type: Sequelize.STRING,
         },
+        description: {
+          allowNull: false,
+          type: Sequelize.STRING,
+        },
+        price: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+        },
         createdAt: {
           allowNull: false,
           type: Sequelize.DATE,
@@ -36,7 +44,7 @@ module.exports = {
         },
       },
       {
-        freezeTableName: true,
+        tablename: "Courses",
       }
     );
   },

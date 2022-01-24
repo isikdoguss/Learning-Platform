@@ -36,7 +36,7 @@ module.exports = {
         },
       },
       {
-        freezeTableName: true,
+        tablename: "Course_categories",
       }
     );
   },

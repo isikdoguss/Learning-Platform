@@ -36,7 +36,7 @@ module.exports = {
         },
       },
       {
-        freezeTableName: true,
+        tablename: "User_course_enrolls",
       }
     );
   },

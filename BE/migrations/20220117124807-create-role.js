@@ -24,7 +24,7 @@ module.exports = {
         },
       },
       {
-        freezeTableName: true,
+        tablename: "Roles",
       }
     );
   },
