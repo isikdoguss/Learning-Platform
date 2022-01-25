@@ -2,6 +2,7 @@ const { Op } = require("sequelize");
 const db = require("../config/sequelize.config");
 const model = require("../models");
 const Course = model.Course;
+const User = model.User;
 const Course_category = model.Course_category;
 
 //GET ALL COURSES UNDER THE SPECIFIIC CATEGORY.
@@ -31,7 +32,13 @@ exports.findAllCoursesByCategory = async (req, res) => {
 
 //GET ALL COURSES.
 exports.findAllCourses = async (req, res) => {
-  const courses = await Course.findAll();
+  const courses = await Course.findAll({
+    include: [
+      {
+        model: User,
+      },
+    ],
+  });
 
   if (!courses) {
     return res.status(404).send({
@@ -47,6 +54,13 @@ exports.getCourse = async (req, res) => {
   const { id } = req.params;
   const course = await Course.findOne({
     where: { id },
+
+    include: [
+      {
+        model: User,
+        where: { id: tutorId },
+      },
+    ],
   });
   if (!course) {
     return res.status(404).send({
